@@ -49,6 +49,7 @@ export class App extends React.Component {
     }
 
     if (status === 'resolved' && totalPages === 0) {
+      this.setState({ status: Status.IDLE });
       return alert(`Oops... there are no images matching your search ${nextValue}`);
     }
 
