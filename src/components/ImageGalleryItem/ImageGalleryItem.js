@@ -14,7 +14,7 @@ const ImageGalleryItem = ({largeImageURL, tags, webformatURL, onImageClick }) =>
       </div>
     </li>
     );
-  };
+};
 
 ImageGalleryItem.propTypes = {
   tags: PropTypes.string.isRequired,

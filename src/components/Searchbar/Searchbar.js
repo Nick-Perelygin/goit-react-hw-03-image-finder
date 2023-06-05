@@ -8,7 +8,7 @@ class Searchbar extends React.Component {
   };
 
   state = {
-      value: '',
+    value: '',
   }
 
   handleOnChange = e => {
