@@ -28,38 +28,38 @@ export class App extends React.Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    const { page, status, totalPages } = this.state;
-    const prevValue = prevState.value;
-    const nextValue = this.state.value;
+    const { page, value } = this.state;
 
-    if (prevState.page !== page) {
-      this.setState({ status: Status.PENDING });
-    }
-
-    if (prevValue !== nextValue || prevState.page !== page) {
-      Api.getImages(nextValue, page)
+    if (prevState.value !== value || 
+      prevState.page !== page) {
+      Api.getImages(value, page)
         .then(images => {
+          this.setState({ status: Status.PENDING });
+          if (images.length === 0) {
+            this.setState({ status: Status.IDLE });
+            return alert(`Oops... there are no images matching your search ${value}`);
+          }
           this.setState(prevState => ({
             images: [...prevState.images, ...images.hits],
             status: Status.RESOLVED,
-            totalPages: Math.floor(images.totalHits / 12),
+            totalPages: Math.ceil(images.totalHits / 12),
           }));
         })
       .catch(error => this.setState({ error, status: Status.REJECTED }));
     }
-
-    if (status === 'resolved' && totalPages === 0) {
-      this.setState({ status: Status.IDLE });
-      return alert(`Oops... there are no images matching your search ${nextValue}`);
-    }
-
-    if (status === 'resolved' && page === totalPages) {
-      return alert('There are all images matching your search');
-    }
   }
 
   onSubmitClick = data => {
-    this.setState({value: data.value})
+    this.setState({value: data.value,
+      images: [],
+      error: null,
+      status: Status.IDLE,
+  
+      page: 1,
+      totalPages: 0,
+  
+      isShowModal: false,
+      modalData: { img: '', tags: '' }})
   }
 
   setModalData = modalData => {
